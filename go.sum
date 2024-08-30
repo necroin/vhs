@@ -1,0 +1,4 @@
+github.com/gorilla/mux v1.8.1 h1:TuBL49tXwgrFYWhqrNgrUNEY92u81SPhu7sTdzQEiWY=
+github.com/gorilla/mux v1.8.1/go.mod h1:AKf9I4AEqPTmMytcMc0KkNouC66V3BtZ4qD5fmWSiMQ=
+github.com/necroin/golibs v0.0.0-20240628103613-ad709daef3bd h1:Cvl/D0ijhvcUz5g5hiw88f7EgYHEBVWhJXGPWAVbjg4=
+github.com/necroin/golibs v0.0.0-20240628103613-ad709daef3bd/go.mod h1:YXmt4WGqqLISEn5bk/T4aXpSBIkl5HWD9Bplh3sSZfc=

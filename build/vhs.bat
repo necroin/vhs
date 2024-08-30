@@ -1,0 +1,1 @@
+go build -o bin\vhs.exe src\vhs\main.go
