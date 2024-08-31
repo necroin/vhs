@@ -8,6 +8,7 @@ import (
 	"path"
 	"vhs/src/network/http"
 	plugins_core "vhs/src/plugins/core"
+	filesystem_utils "vhs/src/plugins/filesystem/utils"
 )
 
 func MoveHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data []byte) error {
@@ -17,6 +18,10 @@ func MoveHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data []by
 	}
 	operation.SrcPath = path.Clean(operation.SrcPath)
 	operation.DstPath = path.Clean(operation.DstPath)
+
+	if clusterInfo.Self.Url == operation.SrcUrl {
+		return filesystem_utils.Rename(operation.SrcPath, operation.DstPath)
+	}
 
 	if err := CopyHandler(clusterInfo, out, data); err != nil {
 		return err

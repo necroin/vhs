@@ -20,3 +20,8 @@ type CopyOperation struct {
 }
 
 type MoveOperation CopyOperation
+
+type RenameOperation struct {
+	SrcPath string `json:"src_path"`
+	DstPath string `json:"dst_path"`
+}

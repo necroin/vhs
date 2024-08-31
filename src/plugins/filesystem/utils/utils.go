@@ -30,6 +30,32 @@ func Rename(srcPath string, dstPath string) error {
 	return os.Rename(srcPath, dstPath)
 }
 
+func CopyFile(srcPath string, dstPath string) error {
+	in, err := os.Open(srcPath)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+
+	out, err := os.Create(dstPath)
+	if err != nil {
+		return err
+	}
+
+	defer func() {
+		cerr := out.Close()
+		if err == nil {
+			err = cerr
+		}
+	}()
+
+	if _, err = io.Copy(out, in); err != nil {
+		return err
+	}
+	err = out.Sync()
+	return nil
+}
+
 func Compress(archivePath string, buffer io.Writer) error {
 	gzipWriter := gzip.NewWriter(buffer)
 	tarWriter := tar.NewWriter(gzipWriter)

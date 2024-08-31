@@ -45,6 +45,10 @@ func ServicesHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data 
 			Endpoint: "/move",
 			Methods:  []string{"POST"},
 		},
+		RenameServiceName: {
+			Endpoint: "/rename",
+			Methods:  []string{"POST"},
+		},
 	}
 	return json.NewEncoder(out).Encode(result)
 }

@@ -12,4 +12,5 @@ const (
 	SelectServiceName         = "select"
 	CopyServiceName           = "copy"
 	MoveServiceName           = "move"
+	RenameServiceName         = "rename"
 )

@@ -288,7 +288,11 @@ function Remove() {
     let focusItem = GetFocusItem("explorer-content-body")
     if (focusItem != null) {
         let focusItemName = focusItem.__custom__.name
-        let focusItemStorageUrl = focusItem.__custom__.url
+        let url = focusItem.__custom__.url
+
+        if (window.__context__.storage != null) {
+            url = window.__context__.storage.url
+        }
 
         let data = JSON.stringify(
             {
@@ -299,7 +303,7 @@ function Remove() {
 
         async_request(
             "POST",
-            focusItemStorageUrl + "/filesystem/delete",
+            url + "/filesystem/delete",
             data,
             (response) => {
                 console.log(`[Remove] response: ${response}`)
@@ -385,4 +389,53 @@ function Paste() {
             }
         }
     );
+}
+
+function Rename() {
+    let focusItem = GetFocusItem("explorer-content-body")
+    if (focusItem != null) {
+        let url = focusItem.__custom__.url
+
+        if (window.__context__.storage != null) {
+            url = window.__context__.storage.url
+        }
+
+        let oldName = focusItem.__custom__.name
+        let newName = document.getElementById("rename-dialog-name").value
+
+        let path = GetCurrentPath()
+
+        let data = JSON.stringify(
+            {
+                src_path: JoinPath(path, oldName),
+                dst_path: JoinPath(path, newName)
+            }
+        )
+        console.log(`[Rename] send data: ${data}`)
+
+        async_request(
+            "POST",
+            url + "/filesystem/rename",
+            data,
+            (response) => {
+                console.log(`[Rename] response: ${response}`)
+
+                GetFilesystem(window.location.host, window.GetCurrentPath())
+
+                if (response == "") {
+                    UpdateStatusBar({
+                        status: "✓",
+                        text: "successfully renamed"
+                    })
+                } else {
+                    UpdateStatusBar({
+                        status: "✕",
+                        text: response
+                    })
+                }
+            }
+        );
+
+        CloseDialog('rename-dialog', 'rename-dialog-overlay')
+    }
 }

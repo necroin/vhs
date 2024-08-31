@@ -44,6 +44,7 @@
             <button class="tool-bar-button" onclick="window.Cut()">
                 <svg fill="#000000" width="24px" height="24px" viewBox="0 0 24 24" id="scissors-3"
                     data-name="Line Color" xmlns="http://www.w3.org/2000/svg" class="icon line-color">
+                    <title>Cut</title>
                     <g id="SVGRepo_bgCarrier" stroke-width="0" />
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
                     <g id="SVGRepo_iconCarrier">
@@ -59,6 +60,7 @@
             <button class="tool-bar-button" onclick="window.Copy()">
                 <svg fill="#ffffff" width="24px" height="24px" viewBox="0 0 24 24" id="copy" data-name="Line Color"
                     xmlns="http://www.w3.org/2000/svg" class="icon line-color">
+                    <title>Copy</title>
                     <g id="SVGRepo_bgCarrier" stroke-width="0" />
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
                     <g id="SVGRepo_iconCarrier">
@@ -72,6 +74,7 @@
             <button class="tool-bar-button" onclick="window.Paste()">
                 <svg width="24px" height="24px" viewBox="0 0 64 64" data-name="Layer 1" id="Layer_1"
                     xmlns="http://www.w3.org/2000/svg" fill="#ffffff">
+                    <title>Paste</title>
                     <g id="SVGRepo_bgCarrier" stroke-width="0" />
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
                     <g id="SVGRepo_iconCarrier">
@@ -99,11 +102,25 @@
                 </svg></button>
             <button class="tool-bar-button" onclick="window.Remove()">
                 <svg fill="#ffffff" width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <title>Remove</title>
                     <g id="SVGRepo_bgCarrier" stroke-width="0" />
                     <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" />
                     <g id="SVGRepo_iconCarrier">
                         <path
                             d="M22,5H17V2a1,1,0,0,0-1-1H8A1,1,0,0,0,7,2V5H2A1,1,0,0,0,2,7H3.061L4,22.063A1,1,0,0,0,5,23H19a1,1,0,0,0,1-.937L20.939,7H22a1,1,0,0,0,0-2ZM9,3h6V5H9Zm9.061,18H5.939L5.064,7H18.936ZM9,11v6a1,1,0,0,1-2,0V11a1,1,0,0,1,2,0Zm4,0v6a1,1,0,0,1-2,0V11a1,1,0,0,1,2,0Zm3-1a1,1,0,0,1,1,1v6a1,1,0,0,1-2,0V11A1,1,0,0,1,16,10Z" />
+                    </g>
+                </svg>
+            </button>
+            <button class="tool-bar-button" onclick="window.OpenDialog('rename-dialog', 'rename-dialog-overlay')">
+                <svg width="24px" height="24px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none"
+                    stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="miter"
+                    transform="rotate(0)">
+                    <title>Rename</title>
+                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                    <g id="SVGRepo_iconCarrier">
+                        <polygon points="16 3 20 7 6 21 2 21 2 17 16 3"></polygon>
+                        <line x1="12" y1="21" x2="22" y2="21"></line>
                     </g>
                 </svg>
             </button>
@@ -141,6 +158,16 @@
                     <button onclick="window.CloseDialog('create-dialog', 'create-dialog-overlay')">Cancel</button>
                     <button
                         onclick="window.Create(window.__context__.createOptionsFocus); window.GetFilesystem(window.location.host, window.GetCurrentPath())">Create</button>
+                </div>
+            </div>
+        </div>
+        <div id="rename-dialog-overlay" class="dialog-overlay">
+            <div id="rename-dialog" class="dialog">
+                <span>New name</span>
+                <input id="rename-dialog-name" type="text"></input>
+                <div class="dialog-buttons">
+                    <button onclick="window.CloseDialog('rename-dialog', 'rename-dialog-overlay')">Cancel</button>
+                    <button onclick="window.Rename()">Rename</button>
                 </div>
             </div>
         </div>
