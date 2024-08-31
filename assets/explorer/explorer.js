@@ -52,6 +52,14 @@ function SetCurrentPath(path) {
     window.localStorage.setItem("explorer-path", path)
 }
 
+function JoinPath(path1, path2) {
+    let result = [path1, path2].join("/")
+    if (path1 == "/") {
+        result = path1 + path2
+    }
+    return result
+}
+
 function SetFocusItem(element, item) {
     if (element == item) {
         return
@@ -61,6 +69,10 @@ function SetFocusItem(element, item) {
     }
     element.focusItem = item
     element.focusItem.style.backgroundColor = "var(--focus-bg-color)"
+}
+
+function GetFocusItem(id) {
+    return document.getElementById(id).focusItem
 }
 
 function OpenDialog(dialog, overlay) {
@@ -144,7 +156,8 @@ function GetFilesystem(url, path) {
             let tableRow = document.createElement("tr")
             tableRow.tabIndex = String(rowsCount)
             tableRow.__custom__ = {
-                "name": directory
+                "name": directory,
+                "url": info["url"],
             }
 
             let nameElement = document.createElement("td")
@@ -243,20 +256,17 @@ function Create(type) {
     let currenPath = GetCurrentPath()
     let name = document.getElementById("create-dialog-name").value
 
-    let createPath = [currenPath, name].join("/")
-    if (currenPath == "/") {
-        createPath = currenPath + name
-    }
-
     let data = JSON.stringify(
         {
             "type": type,
-            "path": createPath,
+            "path": JoinPath(currenPath, name),
         }
     )
+    console.log(`[Create] send data: ${data}`)
 
     let response = request("POST", url + "/filesystem/create", data);
-    console.log(response)
+    console.log(`[Create] response: ${response}`)
+
     CloseDialog('create-dialog', 'create-dialog-overlay')
 
     if (response == "") {
@@ -271,4 +281,105 @@ function Create(type) {
         })
     }
 
+}
+
+function Remove() {
+    let focusItem = GetFocusItem("explorer-content-body")
+    if (focusItem != null) {
+        let focusItemName = focusItem.__custom__.name
+        let focusItemStorageUrl = focusItem.__custom__.url
+
+        let data = JSON.stringify(
+            {
+                "path": JoinPath(GetCurrentPath(), focusItemName),
+            }
+        )
+        console.log(`[Remove] send data: ${data}`)
+
+        async_request(
+            "POST",
+            focusItemStorageUrl + "/filesystem/delete",
+            data,
+            (response) => {
+                console.log(`[Remove] response: ${response}`)
+
+                GetFilesystem(window.location.host, window.GetCurrentPath())
+
+                if (response == "") {
+                    UpdateStatusBar({
+                        status: "✓",
+                        text: "successfully deleted"
+                    })
+                } else {
+                    UpdateStatusBar({
+                        status: "✕",
+                        text: response
+                    })
+                }
+            }
+        );
+    }
+}
+
+function Cut() {
+    let focusItem = GetFocusItem("explorer-content-body")
+    window.__context__.paste = {
+        path: GetCurrentPath(),
+        name: focusItem.__custom__.name,
+        url: focusItem.__custom__.url
+    }
+    window.__context__.paste_endpoint = "/filesystem/move"
+}
+
+function Copy() {
+    let focusItem = GetFocusItem("explorer-content-body")
+    window.__context__.paste = {
+        path: GetCurrentPath(),
+        name: focusItem.__custom__.name,
+        url: focusItem.__custom__.url
+    }
+    window.__context__.paste_endpoint = "/filesystem/copy"
+}
+
+function Paste() {
+    let pasteData = window.__context__.paste
+    let pasteEndpoint = window.__context__.paste_endpoint
+
+    let url = window.location.host
+
+    if (window.__context__.storage != null) {
+        url = window.__context__.storage.url
+    }
+
+    let data = JSON.stringify(
+        {
+            src_path: JoinPath(pasteData.path, pasteData.name),
+            dst_path: JoinPath(GetCurrentPath(), pasteData.name),
+            src_url: pasteData.url,
+        }
+    )
+    console.log(`[Paste] send data: ${data}`)
+
+    async_request(
+        "POST",
+        url + pasteEndpoint,
+        data,
+        (response) => {
+            console.log(`[Paste] response: ${response}`)
+
+            GetFilesystem(window.location.host, window.GetCurrentPath())
+
+            if (response == "") {
+                UpdateStatusBar({
+                    status: "✓",
+                    text: "successfully pasted"
+                })
+            } else {
+                UpdateStatusBar({
+                    status: "✕",
+                    text: response
+                })
+            }
+        }
+    );
 }
