@@ -5,6 +5,14 @@ type CreateOperation struct {
 	Path string `json:"path"`
 }
 
+type DeleteOperation struct {
+	Path string `json:"path"`
+}
+
+type SelectOperation struct {
+	Path string `json:"path"`
+}
+
 type CopyOperation struct {
 	SrcUrl  string `json:"src_url"`
 	SrcPath string `json:"src_path"`
@@ -12,7 +20,3 @@ type CopyOperation struct {
 }
 
 type MoveOperation CopyOperation
-
-type DeleteOperation struct {
-	Path string `json:"path"`
-}

@@ -18,10 +18,10 @@ var (
 
 func CreateHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data []byte) error {
 	operation := &CreateOperation{}
-	operation.Path = path.Clean(operation.Path)
 	if err := json.NewDecoder(bytes.NewReader(data)).Decode(operation); err != nil {
 		return err
 	}
+	operation.Path = path.Clean(operation.Path)
 
 	handler := createHandlers[operation.Type]
 	if err := handler(operation.Path); err != nil {

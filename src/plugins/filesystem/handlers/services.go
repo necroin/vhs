@@ -11,18 +11,35 @@ func ServicesHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data 
 	result := map[string]message.ServiceInfo{
 		PageServiceName: {
 			Endpoint: "/explorer",
+			Methods:  []string{"GET"},
 		},
 		DevicesServiceName: {
-			Endpoint: "/filesystem/devices",
+			Endpoint: "/devices",
+			Methods:  []string{"GET"},
 		},
 		FilesystemSelfServiceName: {
-			Endpoint: "/filesystem/self",
+			Endpoint: "/self",
+			Methods:  []string{"POST", "GET"},
 		},
 		FilesystemAllServiceName: {
-			Endpoint: "/filesystem/all",
+			Endpoint: "/all",
+			Methods:  []string{"POST", "GET"},
 		},
 		CreateServiceName: {
-			Endpoint: "/filesystem/create",
+			Endpoint: "/create",
+			Methods:  []string{"POST"},
+		},
+		DeleteServiceName: {
+			Endpoint: "/delete",
+			Methods:  []string{"POST"},
+		},
+		SelectServiceName: {
+			Endpoint: "/select",
+			Methods:  []string{"POST"},
+		},
+		CopyServiceName: {
+			Endpoint: "/copy",
+			Methods:  []string{"POST"},
 		},
 	}
 	return json.NewEncoder(out).Encode(result)

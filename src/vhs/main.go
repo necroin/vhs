@@ -2,16 +2,11 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
 	"vhs/src/logger"
 	"vhs/src/vhs/app"
 	"vhs/src/vhs/config"
 )
-
-func NotifyHandler(responseWriter http.ResponseWriter, request *http.Request) {
-
-}
 
 func main() {
 	config, err := config.Load()

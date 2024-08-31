@@ -7,6 +7,6 @@ import (
 )
 
 func NameHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data []byte) error {
-	fmt.Fprint(out, "Fileystem")
+	fmt.Fprint(out, "filesystem")
 	return nil
 }

@@ -26,6 +26,7 @@ function async_request(method, url, data, callback) {
 
 function request(method, url, data) {
     url = "http://" + url
+    console.log(url)
 
     var req = new XMLHttpRequest();
     req.open(method, url, false);
@@ -329,6 +330,7 @@ function Cut() {
         url: focusItem.__custom__.url
     }
     window.__context__.paste_endpoint = "/filesystem/move"
+    console.log(`[Cut] saved data to paste: ${JSON.stringify(window.__context__.paste)}`)
 }
 
 function Copy() {
@@ -339,6 +341,7 @@ function Copy() {
         url: focusItem.__custom__.url
     }
     window.__context__.paste_endpoint = "/filesystem/copy"
+    console.log(`[Copy] saved data to paste: ${JSON.stringify(window.__context__.paste)}`)
 }
 
 function Paste() {
@@ -354,7 +357,7 @@ function Paste() {
     let data = JSON.stringify(
         {
             src_path: JoinPath(pasteData.path, pasteData.name),
-            dst_path: JoinPath(GetCurrentPath(), pasteData.name),
+            dst_path: GetCurrentPath(),
             src_url: pasteData.url,
         }
     )

@@ -51,6 +51,7 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 	}
 
 	server.AddHandlerFunc("/notify", app.NotifyHandler, "POST")
+	server.AddHandlerFunc("/services", app.ServicesPageHandler, "GET")
 
 	log.Info("Read plugins")
 	pluginsEntries, err := os.ReadDir(config.PluginsDir)
@@ -79,8 +80,10 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 		json.NewDecoder(bytes.NewBuffer(servicesCallResult)).Decode(&services)
 
 		for serviceName, serviceInfo := range services {
+			serviceEndpoint := "/" + path.Join(string(nameCallResult), serviceInfo.Endpoint)
+			pluginLog.Info("add service by path %s", serviceEndpoint)
 			server.AddHandlerFunc(
-				serviceInfo.Endpoint,
+				serviceEndpoint,
 				func(responseWriter http.ResponseWriter, request *http.Request) {
 					serviceLog := pluginLog.WtihLabels(serviceName)
 					serviceLog.Verbose("called")
@@ -98,7 +101,7 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 					}
 					responseWriter.Write(serviceCallResult)
 				},
-				"POST", "GET",
+				serviceInfo.Methods...,
 			)
 		}
 	}
