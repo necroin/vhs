@@ -41,6 +41,10 @@ func ServicesHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data 
 			Endpoint: "/copy",
 			Methods:  []string{"POST"},
 		},
+		MoveServiceName: {
+			Endpoint: "/move",
+			Methods:  []string{"POST"},
+		},
 	}
 	return json.NewEncoder(out).Encode(result)
 }

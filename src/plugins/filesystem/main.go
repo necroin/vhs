@@ -21,6 +21,7 @@ var (
 		filesystem_handlers.DeleteServiceName:         filesystem_handlers.DeleteHandler,
 		filesystem_handlers.SelectServiceName:         filesystem_handlers.SelectHandler,
 		filesystem_handlers.CopyServiceName:           filesystem_handlers.CopyHandler,
+		filesystem_handlers.MoveServiceName:           filesystem_handlers.MoveHandler,
 	}
 )
 
