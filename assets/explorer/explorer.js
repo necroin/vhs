@@ -138,7 +138,7 @@ function GetDevices(url) {
     async_request("GET", url + "/filesystem/devices", null, callback)
 }
 
-function GetFilesystem(url, path) {
+function GetFilesystem(url, path, search) {
     SetCurrentPath(path)
 
     callback = (response) => {
@@ -149,6 +149,9 @@ function GetFilesystem(url, path) {
         let filesystemTable = document.getElementById("explorer-content-body")
         filesystemTable.replaceChildren()
         filesystemTable.focusItem = null
+
+        let explorerAddressLineDatalist = document.getElementById("explorer-address-line-datalist")
+        explorerAddressLineDatalist.replaceChildren()
 
         let directories = filesystem.directories
         for (let directory in directories) {
@@ -187,6 +190,10 @@ function GetFilesystem(url, path) {
             tableRow.ontouchend = () => GetFilesystem(url, openPath)
 
             filesystemTable.appendChild(tableRow)
+
+            let explorerAddressLineItem = document.createElement("option")
+            explorerAddressLineItem.value = directory
+            explorerAddressLineDatalist.appendChild(explorerAddressLineItem)
 
             rowsCount = rowsCount + 1
         }
@@ -238,7 +245,12 @@ function GetFilesystem(url, path) {
         endpoint = "/filesystem/self"
     }
 
-    async_request("POST", url + endpoint, path, callback)
+    let data = JSON.stringify({
+        "path": path,
+        "search": search,
+    })
+
+    async_request("POST", url + endpoint, data, callback)
 }
 
 function Back() {

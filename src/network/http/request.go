@@ -3,12 +3,15 @@ package http
 import (
 	"bytes"
 	"net/http"
+	"time"
 )
 
-func SendRequest(url string, data []byte, method string) (*http.Response, error) {
+func SendRequest(url string, data []byte, method string, timeout time.Duration) (*http.Response, error) {
 	proto := "http://"
 
-	client := http.Client{}
+	client := http.Client{
+		Timeout: timeout,
+	}
 
 	request, err := http.NewRequest(
 		method,

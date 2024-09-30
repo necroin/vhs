@@ -18,8 +18,9 @@
                     </g>
                 </svg>
             </button>
-            <input id="explorer-address-line" type="text" value="/">
-            <input id="explorer-find-line" type="text" placeholder="Search">
+            <input id="explorer-address-line" type="text" value="/" onchange="GetFilesystem(window.location.host, this.value)" list="explorer-address-line-datalist">
+            <datalist id="explorer-address-line-datalist"></datalist>
+            <input id="explorer-find-line" type="text" placeholder="Search" oninput="GetFilesystem(window.location.host, window.GetCurrentPath(), this.value)">
         </div>
         <div id="tool-bar" class="horizontal-layout">
             <div class="dropdown">

@@ -1,0 +1,1 @@
+.\bin\vhs.exe -plugins=bin/plugins -log-level=debug

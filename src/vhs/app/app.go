@@ -81,7 +81,7 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 
 		for serviceName, serviceInfo := range services {
 			serviceEndpoint := "/" + path.Join(string(nameCallResult), serviceInfo.Endpoint)
-			pluginLog.Info("add service by path %s", serviceEndpoint)
+			pluginLog.Info("add service %s by path %s", serviceName, serviceEndpoint)
 			server.AddHandlerFunc(
 				serviceEndpoint,
 				func(responseWriter http.ResponseWriter, request *http.Request) {

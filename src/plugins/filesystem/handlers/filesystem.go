@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"path"
+	"strings"
 	"vhs/src/message"
 	"vhs/src/network/http"
 	plugins_core "vhs/src/plugins/core"
@@ -23,8 +24,8 @@ type FilesystemDirectory struct {
 	Files       map[string][]FileInfo `json:"files"`
 }
 
-func CollectSelfFilesystem(self *message.HostInfo, walkPath string) *FilesystemDirectory {
-	walkPath = path.Clean(walkPath)
+func CollectSelfFilesystem(self *message.HostInfo, request *CollectFilesytemRequest) *FilesystemDirectory {
+	walkPath := path.Clean(request.Path)
 	if walkPath == "" {
 		walkPath = "/"
 	}
@@ -40,6 +41,12 @@ func CollectSelfFilesystem(self *message.HostInfo, walkPath string) *FilesystemD
 	}
 
 	for _, entry := range entries {
+		if request.Search != "" {
+			if !strings.Contains(strings.ToLower(entry.Name()), strings.ToLower(request.Search)) {
+				continue
+			}
+		}
+
 		stat, err := os.Stat(path.Join(walkPath, entry.Name()))
 		if err != nil {
 			continue
@@ -68,6 +75,16 @@ func CollectSelfFilesystem(self *message.HostInfo, walkPath string) *FilesystemD
 	return filesystemDirectory
 }
 
+func FilesystemSelfHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data []byte) error {
+	request := &CollectFilesytemRequest{}
+	if err := json.Unmarshal(data, request); err != nil {
+		return err
+	}
+
+	result := CollectSelfFilesystem(clusterInfo.Self, request)
+	return json.NewEncoder(out).Encode(result)
+}
+
 func CollectHostFileSystem(host *message.HostInfo, data []byte) *FilesystemDirectory {
 	result := &FilesystemDirectory{}
 
@@ -81,11 +98,6 @@ func CollectHostFileSystem(host *message.HostInfo, data []byte) *FilesystemDirec
 
 	json.NewDecoder(response.Body).Decode(result)
 	return result
-}
-
-func FilesystemSelfHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data []byte) error {
-	result := CollectSelfFilesystem(clusterInfo.Self, string(data))
-	return json.NewEncoder(out).Encode(result)
 }
 
 func FilesystemAllHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data []byte) error {

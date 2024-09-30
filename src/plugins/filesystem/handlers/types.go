@@ -1,5 +1,10 @@
 package filesystem_handlers
 
+type CollectFilesytemRequest struct {
+	Path   string `json:"path"`
+	Search string `json:"search"`
+}
+
 type CreateOperation struct {
 	Type string `json:"type"`
 	Path string `json:"path"`
