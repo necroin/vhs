@@ -1,1 +1,0 @@
-go build -o bin\plugins\filesystem.exe src\plugins\filesystem\main.go
