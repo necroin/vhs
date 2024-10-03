@@ -14,7 +14,6 @@ var (
 		filesystem_handlers.NameServiceName:           filesystem_handlers.NameHandler,
 		filesystem_handlers.ServicesServiceName:       filesystem_handlers.ServicesHandler,
 		filesystem_handlers.PageServiceName:           filesystem_handlers.PageHandler,
-		filesystem_handlers.DevicesServiceName:        filesystem_handlers.DevicesHandler,
 		filesystem_handlers.FilesystemSelfServiceName: filesystem_handlers.FilesystemSelfHandler,
 		filesystem_handlers.FilesystemAllServiceName:  filesystem_handlers.FilesystemAllHandler,
 		filesystem_handlers.CreateServiceName:         filesystem_handlers.CreateHandler,

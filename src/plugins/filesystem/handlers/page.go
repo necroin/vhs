@@ -9,9 +9,9 @@ import (
 )
 
 const (
-	PageHtmlPath   = "assets/explorer/explorer.html"
-	PageStylePath  = "assets/explorer/explorer.css"
-	PageScriptPath = "assets/explorer/explorer.js"
+	PageHtmlPath   = "assets/web_interface/plugins/filesystem/explorer/explorer.html"
+	PageStylePath  = "assets/web_interface/plugins/filesystem/explorer/explorer.css"
+	PageScriptPath = "assets/web_interface/plugins/filesystem/explorer/explorer.js"
 )
 
 func PageHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data []byte) error {

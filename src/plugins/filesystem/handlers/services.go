@@ -13,10 +13,6 @@ func ServicesHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data 
 			Endpoint: "/explorer",
 			Methods:  []string{"GET"},
 		},
-		DevicesServiceName: {
-			Endpoint: "/devices",
-			Methods:  []string{"GET"},
-		},
 		FilesystemSelfServiceName: {
 			Endpoint: "/self",
 			Methods:  []string{"POST", "GET"},

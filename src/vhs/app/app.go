@@ -54,6 +54,7 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 
 	server.AddHandlerFunc("/", app.ServicesPageHandler, "GET")
 	server.AddHandlerFunc("/services", app.ServicesHandler, "GET")
+	server.AddHandlerFunc("/devices", app.DevicesHandler, "GET")
 	server.AddHandlerFunc("/notify", app.NotifyHandler, "POST")
 
 	log.Info("Read plugins")

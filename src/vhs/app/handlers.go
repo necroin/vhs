@@ -11,9 +11,9 @@ import (
 )
 
 const (
-	ServicesPageHtmlPath   = "assets/services/services.html"
-	ServicesPageStylePath  = "assets/services/services.css"
-	ServicesPageScriptPath = "assets/services/services.js"
+	ServicesPageHtmlPath   = "assets/web_interface/services/services.html"
+	ServicesPageStylePath  = "assets/web_interface/services/services.css"
+	ServicesPageScriptPath = "assets/web_interface/services/services.js"
 )
 
 func (app *Application) NotifyHandler(responseWriter http.ResponseWriter, request *http.Request) {
@@ -66,5 +66,13 @@ func (app *Application) ServicesPageHandler(responseWriter http.ResponseWriter, 
 }
 
 func (app *Application) ServicesHandler(responseWriter http.ResponseWriter, request *http.Request) {
-	json.NewEncoder(responseWriter).Encode(app.services)
+	if err := json.NewEncoder(responseWriter).Encode(app.services); err != nil {
+		responseWriter.Write([]byte(err.Error()))
+	}
+}
+
+func (app *Application) DevicesHandler(responseWriter http.ResponseWriter, request *http.Request) {
+	if err := json.NewEncoder(responseWriter).Encode(app.hostsInfo); err != nil {
+		responseWriter.Write([]byte(err.Error()))
+	}
 }

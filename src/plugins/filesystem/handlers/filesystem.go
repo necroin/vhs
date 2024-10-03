@@ -6,8 +6,10 @@ import (
 	"os"
 	"path"
 	"strings"
+	"time"
 	"vhs/src/message"
 	"vhs/src/network/http"
+	"vhs/src/network/lan"
 	plugins_core "vhs/src/plugins/core"
 )
 
@@ -106,17 +108,21 @@ func FilesystemAllHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, 
 		Files:       map[string][]FileInfo{},
 	}
 
-	for _, host := range clusterInfo.Hosts {
-		storageFilesystem := CollectHostFileSystem(
-			host,
-			data,
-		)
-		for directory, info := range storageFilesystem.Directories {
-			result.Directories[directory] = info
-		}
+	currentTime := time.Now().UnixNano()
 
-		for file, info := range storageFilesystem.Files {
-			result.Files[file] = append(result.Files[file], info...)
+	for _, host := range clusterInfo.Hosts {
+		if time.Duration(currentTime-host.Timestamp).Seconds() < (2 * lan.DefaultLanTimeout).Seconds() {
+			storageFilesystem := CollectHostFileSystem(
+				host,
+				data,
+			)
+			for directory, info := range storageFilesystem.Directories {
+				result.Directories[directory] = info
+			}
+
+			for file, info := range storageFilesystem.Files {
+				result.Files[file] = append(result.Files[file], info...)
+			}
 		}
 	}
 

@@ -1,0 +1,1 @@
+go build -o bin\windows\plugins\remote_desktop.exe src\plugins\remote_desktop\main.go
