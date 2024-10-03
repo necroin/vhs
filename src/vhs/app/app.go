@@ -27,6 +27,7 @@ type Application struct {
 	connector    *connector.Connector
 	server       *server.Server
 	log          *logger.LogEntry
+	services     map[string]string
 }
 
 func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
@@ -48,10 +49,12 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 		connector:   connector,
 		server:      server,
 		log:         log,
+		services:    map[string]string{},
 	}
 
+	server.AddHandlerFunc("/", app.ServicesPageHandler, "GET")
+	server.AddHandlerFunc("/services", app.ServicesHandler, "GET")
 	server.AddHandlerFunc("/notify", app.NotifyHandler, "POST")
-	server.AddHandlerFunc("/services", app.ServicesPageHandler, "GET")
 
 	log.Info("Read plugins")
 	pluginsEntries, err := os.ReadDir(config.PluginsDir)
@@ -103,6 +106,10 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 				},
 				serviceInfo.Methods...,
 			)
+
+			if serviceName == "page" {
+				app.services[string(nameCallResult)] = serviceEndpoint
+			}
 		}
 	}
 

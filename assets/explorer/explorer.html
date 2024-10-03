@@ -18,7 +18,7 @@
                     </g>
                 </svg>
             </button>
-            <input id="explorer-address-line" type="text" value="/" onchange="GetFilesystem(window.location.host, this.value)" list="explorer-address-line-datalist">
+            <input id="explorer-address-line" type="text" value="/" onchange="GetFilesystem(window.location.host, this.value)" list="explorer-address-line-datalist" autocomplete="off">
             <datalist id="explorer-address-line-datalist"></datalist>
             <input id="explorer-find-line" type="text" placeholder="Search" oninput="GetFilesystem(window.location.host, window.GetCurrentPath(), this.value)">
         </div>

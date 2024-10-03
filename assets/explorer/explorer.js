@@ -187,12 +187,21 @@ function GetFilesystem(url, path, search) {
             }
 
             tableRow.ondblclick = () => GetFilesystem(url, openPath)
-            tableRow.ontouchend = () => GetFilesystem(url, openPath)
+            tableRow.ontouchend = () => {
+                if (tableRow.doubleClicked) {
+                    GetFilesystem(url, openPath)
+                    return
+                }
+                tableRow.doubleClicked = true
+                setTimeout(() => {
+                    tableRow.doubleClicked = false
+                }, 1000);
+            }
 
             filesystemTable.appendChild(tableRow)
 
             let explorerAddressLineItem = document.createElement("option")
-            explorerAddressLineItem.value = directory
+            explorerAddressLineItem.value = openPath
             explorerAddressLineDatalist.appendChild(explorerAddressLineItem)
 
             rowsCount = rowsCount + 1

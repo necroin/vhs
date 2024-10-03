@@ -2,8 +2,18 @@ package app
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"os"
+	"text/template"
 	"vhs/src/message"
+	plugins_core "vhs/src/plugins/core"
+)
+
+const (
+	ServicesPageHtmlPath   = "assets/services/services.html"
+	ServicesPageStylePath  = "assets/services/services.css"
+	ServicesPageScriptPath = "assets/services/services.js"
 )
 
 func (app *Application) NotifyHandler(responseWriter http.ResponseWriter, request *http.Request) {
@@ -20,5 +30,41 @@ func (app *Application) NotifyHandler(responseWriter http.ResponseWriter, reques
 }
 
 func (app *Application) ServicesPageHandler(responseWriter http.ResponseWriter, request *http.Request) {
+	pageHtmlData, err := os.ReadFile(ServicesPageHtmlPath)
+	if err != nil {
+		responseWriter.Write([]byte(err.Error()))
+		return
+	}
 
+	pageStyleData, err := os.ReadFile(ServicesPageStylePath)
+	if err != nil {
+		responseWriter.Write([]byte(err.Error()))
+		return
+	}
+
+	pageScriptData, err := os.ReadFile(ServicesPageScriptPath)
+	if err != nil {
+		responseWriter.Write([]byte(err.Error()))
+		return
+	}
+
+	pageInfo := plugins_core.PageInfo{
+		Style:  fmt.Sprintf("<style>%s</style>", pageStyleData),
+		Script: fmt.Sprintf("<script>%s</script>", pageScriptData),
+	}
+
+	pageTemplate, err := template.New("page").Parse(string(pageHtmlData))
+	if err != nil {
+		responseWriter.Write([]byte(err.Error()))
+		return
+	}
+
+	if err := pageTemplate.Execute(responseWriter, pageInfo); err != nil {
+		responseWriter.Write([]byte(err.Error()))
+		return
+	}
+}
+
+func (app *Application) ServicesHandler(responseWriter http.ResponseWriter, request *http.Request) {
+	json.NewEncoder(responseWriter).Encode(app.services)
 }
