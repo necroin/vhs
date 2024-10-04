@@ -6,7 +6,6 @@ import (
 	"strings"
 	"time"
 	"vhs/src/logger"
-	"vhs/src/network/lan"
 	"vhs/src/vhs/config"
 )
 
@@ -35,7 +34,7 @@ func (observer *Observer) Start() error {
 		return err
 	}
 
-	remote, err := net.ResolveUDPAddr("udp4", fmt.Sprintf("192.168.%s.255:%s", lanNetwork3, observer.config.ListenPort))
+	remote, err := net.ResolveUDPAddr("udp4", fmt.Sprintf("192.168.%s.255:%s", lanNetwork3, observer.config.TopologyPort))
 	if err != nil {
 		return err
 	}
@@ -51,7 +50,7 @@ func (observer *Observer) Start() error {
 			if err != nil {
 				observer.log.Error("%s", err)
 			}
-			time.Sleep(lan.DefaultLanTimeout)
+			time.Sleep(observer.config.RequestTimeout)
 		}
 	}()
 

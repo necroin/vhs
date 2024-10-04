@@ -137,14 +137,16 @@ func (app *Application) Start() error {
 
 		for {
 			notifyAddr := <-addrs
-			if err := app.Notify(notifyAddr); err != nil {
-				app.log.Error(err.Error())
-			}
+			go func() {
+				if err := app.Notify(notifyAddr); err != nil {
+					app.log.Error(err.Error())
+				}
+			}()
 		}
 	}()
 
 	go func() {
-		time.Sleep(time.Second * config.DefaultInstanceRemoveSeconds)
+		time.Sleep(config.InstanceRemoveTimeout)
 		currentTime := time.Now().UnixNano()
 		currentTimeSeconds := time.Duration(currentTime).Seconds()
 
@@ -152,7 +154,7 @@ func (app *Application) Start() error {
 
 		for hostname, host := range app.hostsInfo {
 			timestampSeconds := time.Duration(host.Timestamp).Seconds()
-			if currentTimeSeconds-timestampSeconds > config.DefaultInstanceRemoveSeconds {
+			if currentTimeSeconds-timestampSeconds > config.InstanceRemoveTimeout.Seconds() {
 				deleteHosts = append(deleteHosts, hostname)
 			}
 		}

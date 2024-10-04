@@ -1,7 +1,11 @@
 package config
 
+import "time"
+
 const (
-	DefaultPort                  = ":3300"
-	DefaultListenPort            = "3301"
-	DefaultInstanceRemoveSeconds = 30
+	ApplicationPort       = ":3300"
+	ListenPort            = "3301"
+	InstanceRemoveTimeout = 30 * time.Second
+	RequestTimeout        = 5 * time.Second
+	LanTimeout            = 2 * RequestTimeout
 )

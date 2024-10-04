@@ -22,7 +22,7 @@ func New(config *config.Config, log *logger.LogEntry) *Listener {
 func (listener *Listener) Start() (chan string, error) {
 	result := make(chan string)
 
-	udpAddr, err := net.ResolveUDPAddr("udp4", fmt.Sprintf(":%s", listener.config.ListenPort))
+	udpAddr, err := net.ResolveUDPAddr("udp4", fmt.Sprintf(":%s", listener.config.TopologyPort))
 	if err != nil {
 		return nil, err
 	}

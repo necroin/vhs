@@ -3,11 +3,6 @@ package lan
 import (
 	"net"
 	"strings"
-	"time"
-)
-
-const (
-	DefaultLanTimeout = 10 * time.Second
 )
 
 func GetMyLanAddr() string {

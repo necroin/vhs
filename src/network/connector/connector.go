@@ -42,7 +42,9 @@ func (connector *Connector) SendRequestWithDataEncode(url string, data any, meth
 func (connector *Connector) SendRequest(url string, data []byte, method string) (*http.Response, error) {
 	proto := "http://"
 
-	client := http.Client{}
+	client := http.Client{
+		Timeout: connector.config.RequestTimeout,
+	}
 
 	request, err := http.NewRequest(
 		method,

@@ -24,15 +24,31 @@ function GetDevices(url) {
         devicesList.replaceChildren()
 
         for (let deviceIndex in devices) {
-            let device = devices[deviceIndex]
-            console.log(device)
-            let streamUrl = "http://" + device.url + "/remote_desktop/stream"
+            for (let i = 0; i < 20; i = i + 1) {
+                let device = devices[deviceIndex]
 
-            let deviceElement = document.createElement("div")
-            deviceElement.className = "device"
-            deviceElement.innerText = device.hostname
-            deviceElement.onclick = () => window.open(streamUrl)
-            devicesList.appendChild(deviceElement)
+                let deviceElement = document.createElement("div")
+                deviceElement.className = "vertical-layout device"
+
+                let deviceNameElement = document.createElement("span")
+                deviceNameElement.innerText = device.hostname
+
+                let deviceAddressElement = document.createElement("span")
+                deviceAddressElement.innerText = "Address: " + device.url
+
+                let devicePlatformElement = document.createElement("span")
+                devicePlatformElement.innerText = "Platform: " + device.platform
+
+                deviceElement.appendChild(deviceNameElement)
+                deviceElement.appendChild(Object.assign(document.createElement("div"), { className: "splitter" }))
+                deviceElement.appendChild(deviceAddressElement)
+                deviceElement.appendChild(devicePlatformElement)
+
+                let streamUrl = "http://" + device.url + "/remote_desktop/stream"
+                deviceElement.onclick = () => window.open(streamUrl)
+
+                devicesList.appendChild(deviceElement)
+            }
         }
     }
     async_request("GET", url + "/devices", null, callback)

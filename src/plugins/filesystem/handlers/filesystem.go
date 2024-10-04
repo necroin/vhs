@@ -9,8 +9,8 @@ import (
 	"time"
 	"vhs/src/message"
 	"vhs/src/network/http"
-	"vhs/src/network/lan"
 	plugins_core "vhs/src/plugins/core"
+	"vhs/src/vhs/config"
 )
 
 type FileInfo struct {
@@ -111,7 +111,7 @@ func FilesystemAllHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, 
 	currentTime := time.Now().UnixNano()
 
 	for _, host := range clusterInfo.Hosts {
-		if time.Duration(currentTime-host.Timestamp).Seconds() < (2 * lan.DefaultLanTimeout).Seconds() {
+		if time.Duration(currentTime-host.Timestamp).Seconds() < (2 * config.LanTimeout).Seconds() {
 			storageFilesystem := CollectHostFileSystem(
 				host,
 				data,

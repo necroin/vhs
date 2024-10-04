@@ -22,11 +22,18 @@ body {
     background-color: var(--hover-bg-color);
 }
 
+.device span {
+    text-wrap: nowrap;
+}
+
 #main-area {
     flex-grow: 1;
     padding: 10px;
 }
 
 #hosts {
-    padding: 10px;
+    flex-grow: 1;
+    width: 0;
+    padding: 20px;
+    overflow-x: auto;
 }

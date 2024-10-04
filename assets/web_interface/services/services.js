@@ -1,5 +1,7 @@
+const proto = "http://"
+
 function async_request(method, url, data, callback) {
-    url = "http://" + url
+    url = proto + url
     console.log(url)
 
     var req = new XMLHttpRequest();
@@ -28,8 +30,24 @@ function GetDevices(url) {
             let device = devices[deviceIndex]
 
             let deviceElement = document.createElement("div")
-            deviceElement.className = "list-item device"
-            deviceElement.innerText = device.hostname
+            deviceElement.className = "list-item device vertical-layout"
+
+            let deviceNameElement = document.createElement("span")
+            deviceNameElement.innerText = device.hostname
+
+            let deviceAddressElement = document.createElement("span")
+            deviceAddressElement.innerText = "Address: " + device.url
+
+            let devicePlatformElement = document.createElement("span")
+            devicePlatformElement.innerText = "Platform: " + device.platform
+
+            deviceElement.appendChild(deviceNameElement)
+            deviceElement.appendChild(Object.assign(document.createElement("div"), { className: "splitter" }))
+            deviceElement.appendChild(deviceAddressElement)
+            deviceElement.appendChild(devicePlatformElement)
+
+            deviceElement.onclick = () => window.open(proto + device.url)
+
             devicesList.appendChild(deviceElement)
         }
     }
@@ -50,7 +68,7 @@ function GetServices(url) {
             serviceElement.className = "list-item"
 
             serviceElement.innerText = serviceName
-            serviceElement.onclick = () => window.open(serviceUrl) 
+            serviceElement.onclick = () => window.open(serviceUrl)
 
             servicesList.appendChild(serviceElement)
         }
