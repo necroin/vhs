@@ -143,6 +143,25 @@ func (app *Application) Start() error {
 		}
 	}()
 
+	go func() {
+		time.Sleep(time.Second * config.DefaultInstanceRemoveSeconds)
+		currentTime := time.Now().UnixNano()
+		currentTimeSeconds := time.Duration(currentTime).Seconds()
+
+		deleteHosts := []string{}
+
+		for hostname, host := range app.hostsInfo {
+			timestampSeconds := time.Duration(host.Timestamp).Seconds()
+			if currentTimeSeconds-timestampSeconds > config.DefaultInstanceRemoveSeconds {
+				deleteHosts = append(deleteHosts, hostname)
+			}
+		}
+
+		for _, hostname := range deleteHosts {
+			delete(app.hostsInfo, hostname)
+		}
+	}()
+
 	app.log.Info("Start lan observer")
 	app.lanObserver.Start()
 
