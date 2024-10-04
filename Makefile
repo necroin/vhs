@@ -4,9 +4,9 @@ start:
 	bin/unix/vhs -plugins=bin/unix/plugins -log-level=debug
 
 .PHONY: build/all
-build/all: build/vhs
+build/all: build/vhs build/plugins
 
-.PHONY: build/vhs build/plugins
+.PHONY: build/vhs
 build/vhs:
 	go build -o bin/unix/vhs src/vhs/main.go
 
