@@ -1,7 +1,25 @@
-:root {
-    --backgroud-color: light-dark(rgb(30, 30, 30), rgb(30, 30, 30));
-    --hover-bg-color: light-dark(rgb(60, 60, 60), rgb(60, 60, 60));
-    --focus-bg-color: light-dark(rgba(90, 90, 90, 1), rgba(90, 90, 90, 1));
-    --border-color: light-dark(gray, gray);
-    --text-color: light-dark(white, white);
+html,
+body {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
+
+#devices {
+    margin: 20px;
+}
+
+.device {
+    display: flex;
+    padding: 10px;
+    min-width: fit-content;
+    height: 30px;
+    border: 1px solid var(--border-color);
+    align-items: center;
+}
+.device:hover {
+    background-color: var(--hover-bg-color);
+}   

@@ -9,6 +9,7 @@ import (
 )
 
 const (
+	BaseStylePath  = "assets/web_interface/style.css"
 	PageHtmlPath   = "assets/web_interface/plugins/filesystem/explorer/explorer.html"
 	PageStylePath  = "assets/web_interface/plugins/filesystem/explorer/explorer.css"
 	PageScriptPath = "assets/web_interface/plugins/filesystem/explorer/explorer.js"
@@ -16,6 +17,11 @@ const (
 
 func PageHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data []byte) error {
 	pageHtmlData, err := os.ReadFile(PageHtmlPath)
+	if err != nil {
+		return err
+	}
+
+	baseStyleData, err := os.ReadFile(BaseStylePath)
 	if err != nil {
 		return err
 	}
@@ -31,8 +37,9 @@ func PageHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data []by
 	}
 
 	pageInfo := plugins_core.PageInfo{
-		Style:  fmt.Sprintf("<style>%s</style>", pageStyleData),
-		Script: fmt.Sprintf("<script>%s</script>", pageScriptData),
+		BaseStyle: fmt.Sprintf("<style>%s</style>", baseStyleData),
+		Style:     fmt.Sprintf("<style>%s</style>", pageStyleData),
+		Script:    fmt.Sprintf("<script>%s</script>", pageScriptData),
 	}
 
 	pageTemplate, err := template.New("page").Parse(string(pageHtmlData))

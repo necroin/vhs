@@ -11,6 +11,7 @@ import (
 )
 
 const (
+	BaseStylePath          = "assets/web_interface/style.css"
 	ServicesPageHtmlPath   = "assets/web_interface/services/services.html"
 	ServicesPageStylePath  = "assets/web_interface/services/services.css"
 	ServicesPageScriptPath = "assets/web_interface/services/services.js"
@@ -36,6 +37,12 @@ func (app *Application) ServicesPageHandler(responseWriter http.ResponseWriter, 
 		return
 	}
 
+	baseStyleData, err := os.ReadFile(BaseStylePath)
+	if err != nil {
+		responseWriter.Write([]byte(err.Error()))
+		return
+	}
+
 	pageStyleData, err := os.ReadFile(ServicesPageStylePath)
 	if err != nil {
 		responseWriter.Write([]byte(err.Error()))
@@ -49,8 +56,9 @@ func (app *Application) ServicesPageHandler(responseWriter http.ResponseWriter, 
 	}
 
 	pageInfo := plugins_core.PageInfo{
-		Style:  fmt.Sprintf("<style>%s</style>", pageStyleData),
-		Script: fmt.Sprintf("<script>%s</script>", pageScriptData),
+		BaseStyle: fmt.Sprintf("<style>%s</style>", baseStyleData),
+		Style:     fmt.Sprintf("<style>%s</style>", pageStyleData),
+		Script:    fmt.Sprintf("<script>%s</script>", pageScriptData),
 	}
 
 	pageTemplate, err := template.New("page").Parse(string(pageHtmlData))

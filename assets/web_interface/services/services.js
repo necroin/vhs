@@ -13,10 +13,10 @@ function async_request(method, url, data, callback) {
 }
 
 function Init() {
-    GetServices()
+    GetServices(window.location.host)
 }
 
-function GetServices() {
+function GetServices(url) {
     callback = (response) => {
         let services = JSON.parse(response)
 
@@ -35,5 +35,5 @@ function GetServices() {
             servicesList.appendChild(serviceElement)
         }
     }
-    async_request("GET", window.location.host + "/services", null, callback)
+    async_request("GET", url + "/services", null, callback)
 }
