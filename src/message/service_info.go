@@ -6,8 +6,9 @@ import (
 )
 
 type ServiceInfo struct {
-	Endpoint string   `json:"endpoint"`
-	Methods  []string `json:"methods"`
+	Endpoint     string   `json:"endpoint"`
+	Methods      []string `json:"methods"`
+	SuppressLogs bool     `json:"suppress_logs"`
 }
 
 func (serviceInfo *ServiceInfo) String() string {

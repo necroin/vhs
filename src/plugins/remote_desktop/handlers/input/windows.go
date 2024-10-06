@@ -1,3 +1,5 @@
+//go:build windows
+
 package remote_desktop_input
 
 import (

@@ -11,12 +11,14 @@ import (
 	"vhs/src/utils"
 )
 
-func (app *Application) CallPlugin(pluginPath string, serviceName string, data []byte) ([]byte, error) {
+func (app *Application) CallPlugin(pluginPath string, serviceName string, data []byte, suppressLogs bool) ([]byte, error) {
 	log := app.log.WtihLabels("Call Plugin", serviceName)
 	execTool, execArgs := utils.GetProcessRunCommand(app.config.Platform, path.Clean(pluginPath))
 	execArgs = append(execArgs, fmt.Sprintf("-call=%s", serviceName))
 	cmd := exec.Command(execTool, execArgs...)
-	log.Debug("cmd command: %s", cmd.Args)
+	if !suppressLogs {
+		log.Debug("cmd command: %s", cmd.Args)
+	}
 
 	myPipeReader, handlerPipeWriter := io.Pipe()
 	defer myPipeReader.Close()
@@ -30,7 +32,9 @@ func (app *Application) CallPlugin(pluginPath string, serviceName string, data [
 		},
 		Data: data,
 	}
-	log.Debug("input: %v", input)
+	if !suppressLogs {
+		log.Debug("input: %v", input)
+	}
 	if err := json.NewEncoder(cmdIn).Encode(input); err != nil {
 		return nil, log.NewError("failed encode service input: %s", err)
 	}
@@ -41,7 +45,9 @@ func (app *Application) CallPlugin(pluginPath string, serviceName string, data [
 
 	go func() {
 		defer handlerPipeWriter.Close()
-		log.Verbose("Run process")
+		if !suppressLogs {
+			log.Verbose("Run process")
+		}
 		if err := cmd.Run(); err != nil {
 			log.Error("failed start process: %s", err)
 		}

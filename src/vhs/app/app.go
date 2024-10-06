@@ -67,14 +67,14 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 		pluginLog := log.WtihLabels("Plugins", entry.Name())
 		pluginPath := path.Join(config.PluginsDir, entry.Name())
 		pluginLog.Info("get plugin name")
-		nameCallResult, err := app.CallPlugin(pluginPath, "name", []byte{})
+		nameCallResult, err := app.CallPlugin(pluginPath, "name", []byte{}, false)
 		if err != nil {
 			pluginLog.Error("failed get name of %s", pluginPath)
 		}
 		pluginLog.Info("plugin name is %s", nameCallResult)
 
 		pluginLog.Info("get plugin services")
-		servicesCallResult, err := app.CallPlugin(pluginPath, "services", []byte{})
+		servicesCallResult, err := app.CallPlugin(pluginPath, "services", []byte{}, false)
 		if err != nil {
 			pluginLog.Error("failed get name of %s", pluginPath)
 		}
@@ -86,18 +86,22 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 		for serviceName, serviceInfo := range services {
 			serviceEndpoint := "/" + path.Join(string(nameCallResult), serviceInfo.Endpoint)
 			pluginLog.Info("add service %s by path %s", serviceName, serviceEndpoint)
+
+			suppressLogs := serviceInfo.SuppressLogs
 			server.AddHandlerFunc(
 				serviceEndpoint,
 				func(responseWriter http.ResponseWriter, request *http.Request) {
 					serviceLog := pluginLog.WtihLabels(serviceName)
-					serviceLog.Verbose("called")
+					if !suppressLogs {
+						serviceLog.Verbose("called")
+					}
 
 					data, err := io.ReadAll(request.Body)
 					if err != nil {
 						serviceLog.Error("failed read data: %s", err.Error())
 						return
 					}
-					serviceCallResult, err := app.CallPlugin(pluginPath, serviceName, data)
+					serviceCallResult, err := app.CallPlugin(pluginPath, serviceName, data, suppressLogs)
 					if err != nil {
 						serviceLog.Error(err.Error())
 						responseWriter.Write(serviceCallResult)

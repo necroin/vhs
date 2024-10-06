@@ -14,12 +14,21 @@ func ServicesHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data 
 			Methods:  []string{"GET"},
 		},
 		ImageServiceName: {
-			Endpoint: "/image",
-			Methods:  []string{"GET"},
+			Endpoint:     "/image",
+			Methods:      []string{"GET"},
+			SuppressLogs: true,
 		},
 		StreamServiceName: {
 			Endpoint: "/stream",
 			Methods:  []string{"GET"},
+		},
+		InputMouseServiceName: {
+			Endpoint: "/input/mouse",
+			Methods:  []string{"POST"},
+		},
+		InputKeyboardServiceName: {
+			Endpoint: "/input/keyboard",
+			Methods:  []string{"POST"},
 		},
 	}
 	return json.NewEncoder(out).Encode(result)

@@ -12,7 +12,7 @@ html, body {
     user-select: none;
 }
 
-.uscrollable {
+.unscrollable {
     overflow: hidden;
 }
 
