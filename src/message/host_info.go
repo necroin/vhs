@@ -6,10 +6,11 @@ import (
 )
 
 type HostInfo struct {
-	Url       string `json:"url"`
-	Hostname  string `json:"hostname"`
-	Platform  string `json:"platform"`
-	Timestamp int64  `json:"timestamp"`
+	Url       string            `json:"url"`
+	Hostname  string            `json:"hostname"`
+	Platform  string            `json:"platform"`
+	Services  map[string]string `json:"services"`
+	Timestamp int64             `json:"timestamp"`
 }
 
 func (hostInfo *HostInfo) String() string {

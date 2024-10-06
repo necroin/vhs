@@ -181,6 +181,7 @@ func (app *Application) Notify(url string) error {
 		Url:       app.config.Url,
 		Hostname:  app.config.Hostname,
 		Platform:  app.config.Platform,
+		Services:  app.services,
 		Timestamp: time.Now().UnixNano(),
 	}
 

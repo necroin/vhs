@@ -4,4 +4,6 @@ const (
 	NameServiceName     = "name"
 	ServicesServiceName = "services"
 	PageServiceName     = "page"
+	StreamServiceName   = "stream"
+	ImageServiceName    = "image"
 )

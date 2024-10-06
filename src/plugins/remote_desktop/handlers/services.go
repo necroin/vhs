@@ -13,6 +13,14 @@ func ServicesHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, data 
 			Endpoint: "/hosts",
 			Methods:  []string{"GET"},
 		},
+		ImageServiceName: {
+			Endpoint: "/image",
+			Methods:  []string{"GET"},
+		},
+		StreamServiceName: {
+			Endpoint: "/stream",
+			Methods:  []string{"GET"},
+		},
 	}
 	return json.NewEncoder(out).Encode(result)
 }

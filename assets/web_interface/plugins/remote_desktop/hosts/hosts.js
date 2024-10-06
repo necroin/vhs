@@ -24,31 +24,33 @@ function GetDevices(url) {
         devicesList.replaceChildren()
 
         for (let deviceIndex in devices) {
-            for (let i = 0; i < 20; i = i + 1) {
-                let device = devices[deviceIndex]
+            let device = devices[deviceIndex]
 
-                let deviceElement = document.createElement("div")
-                deviceElement.className = "vertical-layout device"
-
-                let deviceNameElement = document.createElement("span")
-                deviceNameElement.innerText = device.hostname
-
-                let deviceAddressElement = document.createElement("span")
-                deviceAddressElement.innerText = "Address: " + device.url
-
-                let devicePlatformElement = document.createElement("span")
-                devicePlatformElement.innerText = "Platform: " + device.platform
-
-                deviceElement.appendChild(deviceNameElement)
-                deviceElement.appendChild(Object.assign(document.createElement("div"), { className: "splitter" }))
-                deviceElement.appendChild(deviceAddressElement)
-                deviceElement.appendChild(devicePlatformElement)
-
-                let streamUrl = "http://" + device.url + "/remote_desktop/stream"
-                deviceElement.onclick = () => window.open(streamUrl)
-
-                devicesList.appendChild(deviceElement)
+            if (device.services["remote_desktop"] == null) {
+                continue
             }
+
+            let deviceElement = document.createElement("div")
+            deviceElement.className = "vertical-layout device"
+
+            let deviceNameElement = document.createElement("span")
+            deviceNameElement.innerText = device.hostname
+
+            let deviceAddressElement = document.createElement("span")
+            deviceAddressElement.innerText = "Address: " + device.url
+
+            let devicePlatformElement = document.createElement("span")
+            devicePlatformElement.innerText = "Platform: " + device.platform
+
+            deviceElement.appendChild(deviceNameElement)
+            deviceElement.appendChild(Object.assign(document.createElement("div"), { className: "splitter" }))
+            deviceElement.appendChild(deviceAddressElement)
+            deviceElement.appendChild(devicePlatformElement)
+
+            let streamUrl = "http://" + device.url + "/remote_desktop/stream"
+            deviceElement.onclick = () => window.open(streamUrl)
+
+            devicesList.appendChild(deviceElement)
         }
     }
     async_request("GET", url + "/devices", null, callback)

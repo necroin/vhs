@@ -41,10 +41,22 @@ function GetDevices(url) {
             let devicePlatformElement = document.createElement("span")
             devicePlatformElement.innerText = "Platform: " + device.platform
 
+            let deviceServicesElement = document.createElement("div")
+            deviceServicesElement.innerHTML = "Services:"
+            deviceServicesElement.className = "vertical-layout"
+
+            for (let serviceName in device.services) {
+                let deviceServiceElement = document.createElement("span")
+                deviceServiceElement.innerText = serviceName
+                deviceServiceElement.style.marginLeft = "20px"
+                deviceServicesElement.appendChild(deviceServiceElement)
+            }
+
             deviceElement.appendChild(deviceNameElement)
             deviceElement.appendChild(Object.assign(document.createElement("div"), { className: "splitter" }))
             deviceElement.appendChild(deviceAddressElement)
             deviceElement.appendChild(devicePlatformElement)
+            deviceElement.appendChild(deviceServicesElement)
 
             deviceElement.onclick = () => window.open(proto + device.url)
 
