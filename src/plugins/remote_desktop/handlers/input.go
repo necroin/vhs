@@ -38,12 +38,15 @@ func MouseEventHandler(clusterInfo *plugins_core.ClusterInfo, out io.Writer, dat
 		remote_desktop_input.MouseMove(coords.X, coords.Y)
 		remote_desktop_input.MouseLeftDown()
 	}
+
 	if event.Type == "leftUp" {
 		remote_desktop_input.MouseLeftUp()
 	}
+
 	if event.Type == "move" {
 		remote_desktop_input.MouseMove(coords.X, coords.Y)
 	}
+
 	if event.Type == "scroll" {
 		remote_desktop_input.MouseWheel(coords.X, coords.Y, event.Scroll.Y)
 	}

@@ -11,7 +11,7 @@ import (
 	"golang.org/x/sys/windows"
 )
 
-func CaptureImage(desktopHWND windows.HWND, x int, y int, width int, height int) (image.Image, error) {
+func CaptureImage(desktopHWND windows.HWND, x int, y int, width int, height int) (*image.RGBA, error) {
 	desktopHDC, err := winapi.GetWindowDC(desktopHWND)
 	if err != nil {
 		return nil, fmt.Errorf("failed get desktop device context: %s", err)
@@ -86,7 +86,7 @@ func RectHeight(value windows.Rect) int32 {
 	return value.Bottom - value.Top
 }
 
-func CaptureDesktopImage() (image.Image, error) {
+func CaptureDesktopImage() (*image.RGBA, error) {
 	desktopHWND := winapi.GetDesktopWindow()
 
 	desktopRect, err := winapi.GetWindowRect(desktopHWND)
