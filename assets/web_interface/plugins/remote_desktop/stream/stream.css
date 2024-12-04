@@ -20,4 +20,5 @@ html, body {
 
 #canvas{
     cursor: default;
+    image-rendering: crisp-edges;
 }

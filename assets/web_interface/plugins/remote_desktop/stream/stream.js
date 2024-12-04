@@ -6,9 +6,6 @@ const keyboardInputPath = "/input/keyboard"
 const mouseInputUrl = window.location.host + servicePath + mouseInputPath
 const keyboardInputUrl = window.location.host + servicePath + keyboardInputPath
 
-const screenWidthConst = document.documentElement.clientWidth
-const screenHeightConst = document.documentElement.clientHeight
-
 
 function request(methood, url, data) {
     url = proto + url
@@ -20,10 +17,15 @@ function request(methood, url, data) {
 }
 
 function isRotated() {
-    return screenWidthConst < screenHeightConst
+    let screenWidthConst = document.documentElement.clientWidth
+    let screenHeightConst = document.documentElement.clientHeight
+    return screenWidthConst < screenHeightConst && (screen.orientation.type == "landscape-primary" || screen.orientation.type == "landscape-secondary")
 }
 
 function GetScreenWidth() {
+    let screenWidthConst = document.documentElement.clientWidth
+    let screenHeightConst = document.documentElement.clientHeight
+
     if (isRotated()) {
         return screenHeightConst
     }
@@ -31,6 +33,9 @@ function GetScreenWidth() {
 }
 
 function GetScreenHeight() {
+    let screenWidthConst = document.documentElement.clientWidth
+    let screenHeightConst = document.documentElement.clientHeight
+
     if (isRotated()) {
         return screenWidthConst
     }
@@ -174,28 +179,20 @@ function LaunchStream(url) {
     let ctx = canvas.getContext('2d')
     newImage = new Image();
     newImage.onload = function () {
-        // canvas.width = newImage.width
-        // canvas.height = newImage.height
-        // canvas.style.width = newImage.width
-        // canvas.style.height = newImage.height
-        // document.body.style.width = newImage.width
-        // document.body.style.height = newImage.height
-        // ctx.drawImage(newImage, 0, 0, newImage.width, newImage.height);
+        // let screenWidth = GetScreenWidth()
+        // let screenHeight = GetScreenHeight()
+        // // let scale = Math.min(screenWidth / newImage.width, screenHeight / newImage.height);
+        let scale = 1
 
-
-        let screenWidth = GetScreenWidth()
-        let screenHeight = GetScreenHeight()
-
-        let scale = Math.min(screenWidth / newImage.width, screenHeight / newImage.height);
-        let x = (screenWidth - newImage.width * scale) / 2;
-        let y = (screenHeight - newImage.height * scale) / 2;
+        document.querySelector('meta[name="viewport"]').setAttribute('content', `width=${newImage.width}`)
 
         canvas.__custom__.scale = scale
-        // canvas.offsetLeft = x
-        // canvas.offsetTop = y
 
         canvas.width = newImage.width * scale
         canvas.height = newImage.height * scale
+
+        // canvas.imageSmoothingEnabled = false
+        // ctx.imageSmoothingEnabled = false
 
         ctx.drawImage(newImage, 0, 0, newImage.width * scale, newImage.height * scale);
         setTimeout(window.LaunchStream, 16, url)
