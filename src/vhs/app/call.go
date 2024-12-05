@@ -7,11 +7,17 @@ import (
 	"io"
 	"os/exec"
 	"path"
+	"time"
 	plugins_core "vhs/src/plugins/core"
 	"vhs/src/utils"
 )
 
 func (app *Application) CallPlugin(pluginPath string, serviceName string, data []byte, suppressLogs bool) ([]byte, error) {
+	clock := utils.NewClock(func(delta time.Duration) {
+		app.metrics.Storage.CallTimeHistogramVector.WithLabelValues(pluginPath, serviceName).Observe(float64(delta.Milliseconds()))
+	})
+	defer clock.Stop()
+
 	log := app.log.WtihLabels("Call Plugin", serviceName)
 	execTool, execArgs := utils.GetProcessRunCommand(app.config.Platform, path.Clean(pluginPath))
 	execArgs = append(execArgs, fmt.Sprintf("-call=%s", serviceName))

@@ -61,7 +61,7 @@ func CaptureImage(desktopHWND windows.HWND, x int, y int, width int, height int)
 	img := image.NewRGBA(image.Rect(0, 0, width, height))
 
 	i := 0
-	src := uintptr(unsafe.Pointer(memptr))
+	src := uintptr(memptr)
 	for y := int32(0); y < int32(height); y++ {
 		for x := int32(0); x < int32(width); x++ {
 			B := *(*uint8)(unsafe.Pointer(src))

@@ -6,7 +6,7 @@ require (
 	github.com/chai2010/guetzli-go v1.0.1
 	github.com/chai2010/webp v1.1.1
 	github.com/gorilla/mux v1.8.1
-	github.com/necroin/golibs v0.0.0-20240628103613-ad709daef3bd
+	github.com/necroin/golibs v0.0.0-20241120123653-2fa7a71451fc
 	golang.org/x/sys v0.26.0
 )
 

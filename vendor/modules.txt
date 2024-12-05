@@ -15,8 +15,10 @@ github.com/gorilla/mux
 ## explicit; go 1.20
 # github.com/mholt/archiver v3.1.1+incompatible
 ## explicit
-# github.com/necroin/golibs v0.0.0-20240628103613-ad709daef3bd
+# github.com/necroin/golibs v0.0.0-20241120123653-2fa7a71451fc
 ## explicit; go 1.21
+github.com/necroin/golibs/libs/concurrent
+github.com/necroin/golibs/libs/metrics
 # github.com/nickalie/go-binwrapper v0.0.0-20190114141239-525121d43c84
 ## explicit
 # github.com/nickalie/go-mozjpegbin v0.0.0-20170427050522-d8a58e243a3d

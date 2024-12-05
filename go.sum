@@ -19,6 +19,8 @@ github.com/mholt/archiver v3.1.1+incompatible h1:1dCVxuqs0dJseYEhi5pl7MYPH9zDa1w
 github.com/mholt/archiver v3.1.1+incompatible/go.mod h1:Dh2dOXnSdiLxRiPoVfIr/fI1TwETms9B8CTWfeh7ROU=
 github.com/necroin/golibs v0.0.0-20240628103613-ad709daef3bd h1:Cvl/D0ijhvcUz5g5hiw88f7EgYHEBVWhJXGPWAVbjg4=
 github.com/necroin/golibs v0.0.0-20240628103613-ad709daef3bd/go.mod h1:YXmt4WGqqLISEn5bk/T4aXpSBIkl5HWD9Bplh3sSZfc=
+github.com/necroin/golibs v0.0.0-20241120123653-2fa7a71451fc h1:AEx22XoG1bx9nFmnCYe/e5txOWhRCpqOiWnzGKSG1WQ=
+github.com/necroin/golibs v0.0.0-20241120123653-2fa7a71451fc/go.mod h1:r84ZoM6GT6FWQDX/ee7FNJDKjA20hkoWnWv/mLWFEtg=
 github.com/nickalie/go-binwrapper v0.0.0-20190114141239-525121d43c84 h1:/6MoQlTdk1eAi0J9O89ypO8umkp+H7mpnSF2ggSL62Q=
 github.com/nickalie/go-binwrapper v0.0.0-20190114141239-525121d43c84/go.mod h1:Eeech2fhQ/E4bS8cdc3+SGABQ+weQYGyWBvZ/mNr5uY=
 github.com/nickalie/go-mozjpegbin v0.0.0-20170427050522-d8a58e243a3d h1:D5K+g5Jagd4FwmIGhv8rslipRyRM9KeFAhLbM4OHGSA=

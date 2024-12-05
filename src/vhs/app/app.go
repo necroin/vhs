@@ -28,6 +28,7 @@ type Application struct {
 	server       *server.Server
 	log          *logger.LogEntry
 	services     map[string]string
+	metrics      *Metrics
 }
 
 func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
@@ -50,12 +51,14 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 		server:      server,
 		log:         log,
 		services:    map[string]string{},
+		metrics:     NewMetrics(),
 	}
 
 	server.AddHandlerFunc("/", app.ServicesPageHandler, "GET")
 	server.AddHandlerFunc("/services", app.ServicesHandler, "GET")
 	server.AddHandlerFunc("/devices", app.DevicesHandler, "GET")
 	server.AddHandlerFunc("/notify", app.NotifyHandler, "POST")
+	server.AddHandler("/metrics", app.metrics.Registry.Handler(), "GET")
 
 	log.Info("Read plugins")
 	pluginsEntries, err := os.ReadDir(config.PluginsDir)
