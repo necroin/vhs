@@ -7,12 +7,18 @@ import (
 	"io"
 	"os/exec"
 	"path"
+	"sync"
 	"time"
 	plugins_core "vhs/src/plugins/core"
 	"vhs/src/utils"
 )
 
-func (app *Application) CallPlugin(pluginPath string, serviceName string, data []byte, suppressLogs bool) ([]byte, error) {
+type CallOptions struct {
+	CmdOut       io.Writer
+	SuppressLogs bool
+}
+
+func (app *Application) CallPlugin(pluginPath string, serviceName string, data []byte, options CallOptions) ([]byte, error) {
 	clock := utils.NewClock(func(delta time.Duration) {
 		app.metrics.Storage.CallTimeHistogramVector.WithLabelValues(pluginPath, serviceName).Observe(float64(delta.Milliseconds()))
 	})
@@ -22,15 +28,13 @@ func (app *Application) CallPlugin(pluginPath string, serviceName string, data [
 	execTool, execArgs := utils.GetProcessRunCommand(app.config.Platform, path.Clean(pluginPath))
 	execArgs = append(execArgs, fmt.Sprintf("-call=%s", serviceName))
 	cmd := exec.Command(execTool, execArgs...)
-	if !suppressLogs {
+	if !options.SuppressLogs {
 		log.Debug("cmd command: %s", cmd.Args)
 	}
 
-	myPipeReader, handlerPipeWriter := io.Pipe()
-	defer myPipeReader.Close()
-	defer handlerPipeWriter.Close()
-
 	cmdIn := &bytes.Buffer{}
+	cmdOut := &bytes.Buffer{}
+
 	input := &plugins_core.ServiceInput{
 		ClusterInfo: plugins_core.ClusterInfo{
 			Self:  app.selfHostInfo,
@@ -38,7 +42,7 @@ func (app *Application) CallPlugin(pluginPath string, serviceName string, data [
 		},
 		Data: data,
 	}
-	if !suppressLogs {
+	if !options.SuppressLogs {
 		log.Debug("input: %v", input)
 	}
 	if err := json.NewEncoder(cmdIn).Encode(input); err != nil {
@@ -46,23 +50,26 @@ func (app *Application) CallPlugin(pluginPath string, serviceName string, data [
 	}
 
 	cmd.Stdin = cmdIn
-	cmd.Stdout = handlerPipeWriter
-	cmd.Stderr = handlerPipeWriter
+	cmd.Stdout = cmdOut
+	cmd.Stderr = cmdOut
 
+	if options.CmdOut != nil {
+		cmd.Stdout = options.CmdOut
+		cmd.Stderr = options.CmdOut
+	}
+
+	wg := sync.WaitGroup{}
+	wg.Add(1)
 	go func() {
-		defer handlerPipeWriter.Close()
-		if !suppressLogs {
+		defer wg.Done()
+		if !options.SuppressLogs {
 			log.Verbose("Run process")
 		}
 		if err := cmd.Run(); err != nil {
 			log.Error("failed start process: %s", err)
 		}
 	}()
-
-	cmdOut := &bytes.Buffer{}
-	if _, err := io.Copy(cmdOut, myPipeReader); err != nil {
-		return nil, log.NewError("failed copy process result: %s", err)
-	}
+	wg.Wait()
 
 	return cmdOut.Bytes(), nil
 }

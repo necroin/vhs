@@ -16,6 +16,8 @@ import (
 	lan_observer "vhs/src/network/lan/observer"
 	"vhs/src/network/server"
 	"vhs/src/vhs/config"
+
+	http_pprof "net/http/pprof"
 )
 
 type Application struct {
@@ -60,6 +62,9 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 	server.AddHandlerFunc("/notify", app.NotifyHandler, "POST")
 	server.AddHandler("/metrics", app.metrics.Registry.Handler(), "GET")
 
+	server.AddHandlerFunc("/debug/pprof", http_pprof.Index, "GET")
+	server.AddHandlerFunc("/debug/pprof/profile", http_pprof.Profile, "GET")
+
 	log.Info("Read plugins")
 	pluginsEntries, err := os.ReadDir(config.PluginsDir)
 	if err != nil {
@@ -70,14 +75,14 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 		pluginLog := log.WtihLabels("Plugins", entry.Name())
 		pluginPath := path.Join(config.PluginsDir, entry.Name())
 		pluginLog.Info("get plugin name")
-		nameCallResult, err := app.CallPlugin(pluginPath, "name", []byte{}, false)
+		nameCallResult, err := app.CallPlugin(pluginPath, "name", []byte{}, CallOptions{})
 		if err != nil {
 			pluginLog.Error("failed get name of %s", pluginPath)
 		}
 		pluginLog.Info("plugin name is %s", nameCallResult)
 
 		pluginLog.Info("get plugin services")
-		servicesCallResult, err := app.CallPlugin(pluginPath, "services", []byte{}, false)
+		servicesCallResult, err := app.CallPlugin(pluginPath, "services", []byte{}, CallOptions{})
 		if err != nil {
 			pluginLog.Error("failed get name of %s", pluginPath)
 		}
@@ -104,13 +109,19 @@ func New(config *config.Config, log *logger.LogEntry) (*Application, error) {
 						serviceLog.Error("failed read data: %s", err.Error())
 						return
 					}
-					serviceCallResult, err := app.CallPlugin(pluginPath, serviceName, data, suppressLogs)
-					if err != nil {
+
+					if _, err = app.CallPlugin(
+						pluginPath,
+						serviceName,
+						data,
+						CallOptions{
+							CmdOut:       responseWriter,
+							SuppressLogs: suppressLogs,
+						},
+					); err != nil {
 						serviceLog.Error(err.Error())
-						responseWriter.Write(serviceCallResult)
 						return
 					}
-					responseWriter.Write(serviceCallResult)
 				},
 				serviceInfo.Methods...,
 			)
